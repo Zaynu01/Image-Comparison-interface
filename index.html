@@ -1,0 +1,897 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Comparison Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #f0fdfa 100%);
+            min-height: 100vh;
+            padding: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
+            40%, 43% { transform: translateY(-10px); }
+            70% { transform: translateY(-5px); }
+            90% { transform: translateY(-2px); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: slideInUp 0.6s ease-out 0.2s both;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .header-line {
+            width: 64px;
+            height: 4px;
+            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            border-radius: 9999px;
+            margin: 0 auto 24px;
+            animation: scaleIn 0.8s ease-out 0.4s both;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #2563eb, #0891b2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+            animation: slideInUp 0.7s ease-out 0.3s both;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+            max-width: 32rem;
+            margin: 0 auto;
+            animation: slideInUp 0.8s ease-out 0.4s both;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            margin-bottom: 48px;
+            max-width: 64rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (min-width: 768px) {
+            .upload-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            animation: slideInUp 0.9s ease-out 0.5s both;
+        }
+
+        .upload-area:nth-child(2) {
+            animation-delay: 0.6s;
+        }
+
+        .upload-box {
+            position: relative;
+            width: 100%;
+            max-width: 28rem;
+            height: 20rem;
+            border: 2px dashed #d1d5db;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            background: #f9fafb;
+        }
+
+        .upload-box.first-image {
+            border-color: #bfdbfe;
+            background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+        }
+
+        .upload-box.second-image {
+            border-color: #a7f3d0;
+            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 100%);
+        }
+
+        .upload-box:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
+        }
+
+        .upload-box.drag-over {
+            transform: translateY(-2px) scale(1.01);
+            animation: pulse 1s infinite;
+        }
+
+        .upload-box.drag-over.first-image {
+            border-color: #60a5fa;
+            background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .upload-box.drag-over.second-image {
+            border-color: #34d399;
+            background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
+            box-shadow: 0 0 30px rgba(52, 211, 153, 0.3);
+        }
+
+        .upload-box.has-image {
+            border-style: solid;
+        }
+
+        .upload-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-content:hover {
+            transform: translateY(-2px);
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            transition: all 0.3s ease;
+        }
+
+        .upload-icon:hover {
+            animation: bounce 0.6s ease;
+        }
+
+        .upload-text {
+            text-align: center;
+        }
+
+        .upload-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .upload-subtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
+            transition: color 0.3s ease;
+        }
+
+        .upload-box:hover .upload-title {
+            color: #1f2937;
+        }
+
+        .upload-box:hover .upload-subtitle {
+            color: #4b5563;
+        }
+
+        .image-preview, .pdf-preview {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .pdf-preview-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
+            color: #dc2626;
+            gap: 12px;
+        }
+
+        .pdf-icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #dc2626;
+            border-radius: 12px;
+            animation: pulse 2s infinite;
+        }
+
+        .pdf-name {
+            font-weight: 600;
+            text-align: center;
+            padding: 0 16px;
+            word-break: break-word;
+        }
+
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 12px;
+        }
+
+        .image-preview:hover .image-overlay,
+        .pdf-preview:hover .image-overlay {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .image-preview:hover .preview-image {
+            transform: scale(1.05);
+        }
+
+        .overlay-button {
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0.8) translateY(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-preview:hover .overlay-button,
+        .pdf-preview:hover .overlay-button {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .overlay-button:hover {
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .overlay-button:nth-child(1) {
+            transition-delay: 0.1s;
+        }
+
+        .overlay-button:nth-child(2) {
+            transition-delay: 0.2s;
+        }
+
+        .compare-section {
+            text-align: center;
+            margin-bottom: 64px;
+            animation: slideInUp 1s ease-out 0.7s both;
+        }
+
+        .compare-button {
+            background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
+            color: white;
+            border: none;
+            border-radius: 9999px;
+            padding: 16px 40px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .compare-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .compare-button:hover::before {
+            left: 100%;
+        }
+
+        .compare-button:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.4);
+        }
+
+        .compare-button:active:not(:disabled) {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .compare-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            z-index: 1000;
+            padding: 16px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 64rem;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.9);
+            animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6b7280;
+        }
+
+        .close-button:hover {
+            background: #f3f4f6;
+            color: #374151;
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            max-height: calc(90vh - 100px);
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .modal-pdf {
+            text-align: center;
+            padding: 40px 20px;
+            color: #dc2626;
+        }
+
+        .modal-pdf-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #dc2626;
+            border-radius: 16px;
+            animation: pulse 2s infinite;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transform: translateX(400px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            max-width: 400px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            animation: slideInUp 0.4s ease-out;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #1f2937;
+        }
+
+        .toast-message {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .upload-grid {
+                gap: 24px;
+            }
+
+            .compare-button {
+                padding: 14px 32px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-line"></div>
+            <h1 class="title">File Comparison Tool</h1>
+            <p class="subtitle">Upload two images or PDFs to compare and find differences</p>
+        </div>
+
+        <!-- Upload Areas -->
+        <div class="upload-grid">
+            <div class="upload-area">
+                <div class="upload-box first-image" id="uploadBox1">
+                    <div class="upload-content" id="uploadContent1">
+                        <div class="upload-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                        </div>
+                        <div class="upload-text">
+                            <p class="upload-title">Drop your first file here</p>
+                            <p class="upload-subtitle">Images or PDFs • Click to browse</p>
+                        </div>
+                    </div>
+                </div>
+                <input type="file" class="file-input" id="fileInput1" accept="image/*,.pdf">
+            </div>
+
+            <div class="upload-area">
+                <div class="upload-box second-image" id="uploadBox2">
+                    <div class="upload-content" id="uploadContent2">
+                        <div class="upload-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                        </div>
+                        <div class="upload-text">
+                            <p class="upload-title">Drop your second file here</p>
+                            <p class="upload-subtitle">Images or PDFs • Click to browse</p>
+                        </div>
+                    </div>
+                </div>
+                <input type="file" class="file-input" id="fileInput2" accept="image/*,.pdf">
+            </div>
+        </div>
+
+        <!-- Compare Button -->
+        <div class="compare-section">
+            <button class="compare-button" id="compareButton" disabled>Compare Files</button>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">File Preview</h3>
+                <button class="close-button" id="closeModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <img class="modal-image" id="modalImage" src="" alt="Preview" style="display: none;">
+                <div class="modal-pdf" id="modalPdf" style="display: none;">
+                    <div class="modal-pdf-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                    </div>
+                    <h3 id="modalPdfName">PDF File</h3>
+                    <p>PDF files cannot be previewed in browser</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast" id="toast">
+        <div class="toast-title" id="toastTitle"></div>
+        <div class="toast-message" id="toastMessage"></div>
+    </div>
+
+    <script>
+        // Global state
+        let firstFile = null;
+        let secondFile = null;
+        let firstFileData = null;
+        let secondFileData = null;
+
+        // DOM elements
+        const uploadBox1 = document.getElementById('uploadBox1');
+        const uploadBox2 = document.getElementById('uploadBox2');
+        const fileInput1 = document.getElementById('fileInput1');
+        const fileInput2 = document.getElementById('fileInput2');
+        const compareButton = document.getElementById('compareButton');
+        const previewModal = document.getElementById('previewModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalImage = document.getElementById('modalImage');
+        const modalPdf = document.getElementById('modalPdf');
+        const modalPdfName = document.getElementById('modalPdfName');
+        const closeModal = document.getElementById('closeModal');
+        const toast = document.getElementById('toast');
+
+        // Utility functions
+        function showToast(title, message) {
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function updateCompareButton() {
+            compareButton.disabled = !firstFile || !secondFile;
+        }
+
+        function isImageFile(file) {
+            return file.type.startsWith('image/');
+        }
+
+        function isPdfFile(file) {
+            return file.type === 'application/pdf';
+        }
+
+        function createFilePreview(file, fileData, uploadBox, isFirst) {
+            if (isImageFile(file)) {
+                const preview = document.createElement('div');
+                preview.className = 'image-preview';
+                preview.innerHTML = `
+                    <img class="preview-image" src="${fileData}" alt="Uploaded preview">
+                    <div class="image-overlay">
+                        <button class="overlay-button" onclick="previewFile('${fileData}', '${isFirst ? 'First' : 'Second'} Image Preview', 'image', '${file.name}')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                        <button class="overlay-button" onclick="removeFile(${isFirst ? 1 : 2})">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3,6 5,6 21,6"/>
+                                <path d="M19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                uploadBox.innerHTML = '';
+                uploadBox.appendChild(preview);
+            } else if (isPdfFile(file)) {
+                const preview = document.createElement('div');
+                preview.className = 'pdf-preview';
+                preview.innerHTML = `
+                    <div class="pdf-preview-content">
+                        <div class="pdf-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                        </div>
+                        <div class="pdf-name">${file.name}</div>
+                    </div>
+                    <div class="image-overlay">
+                        <button class="overlay-button" onclick="previewFile(null, '${isFirst ? 'First' : 'Second'} PDF Preview', 'pdf', '${file.name}')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                        <button class="overlay-button" onclick="removeFile(${isFirst ? 1 : 2})">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3,6 5,6 21,6"/>
+                                <path d="M19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                uploadBox.innerHTML = '';
+                uploadBox.appendChild(preview);
+            }
+            uploadBox.classList.add('has-image');
+        }
+
+        function resetUploadBox(uploadBox, isFirst) {
+            uploadBox.classList.remove('has-image');
+            uploadBox.innerHTML = `
+                <div class="upload-content">
+                    <div class="upload-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                    </div>
+                    <div class="upload-text">
+                        <p class="upload-title">Drop your ${isFirst ? 'first' : 'second'} file here</p>
+                        <p class="upload-subtitle">Images or PDFs • Click to browse</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Global functions for onclick handlers
+        window.previewFile = function(fileData, title, type, fileName) {
+            modalTitle.textContent = title;
+            
+            if (type === 'image') {
+                modalImage.src = fileData;
+                modalImage.style.display = 'block';
+                modalPdf.style.display = 'none';
+            } else if (type === 'pdf') {
+                modalPdfName.textContent = fileName;
+                modalImage.style.display = 'none';
+                modalPdf.style.display = 'block';
+            }
+            
+            previewModal.classList.add('show');
+        }
+
+        window.removeFile = function(fileNumber) {
+            if (fileNumber === 1) {
+                firstFile = null;
+                firstFileData = null;
+                fileInput1.value = '';
+                resetUploadBox(uploadBox1, true);
+                showToast('File Removed', 'First file has been removed.');
+            } else {
+                secondFile = null;
+                secondFileData = null;
+                fileInput2.value = '';
+                resetUploadBox(uploadBox2, false);
+                showToast('File Removed', 'Second file has been removed.');
+            }
+            updateCompareButton();
+        }
+
+        // File handling
+        function handleFileUpload(file, isFirst) {
+            if (!isImageFile(file) && !isPdfFile(file)) {
+                showToast('Invalid File', 'Please select an image or PDF file.');
+                return;
+            }
+
+            if (isImageFile(file)) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (isFirst) {
+                        firstFile = file;
+                        firstFileData = e.target.result;
+                        createFilePreview(file, firstFileData, uploadBox1, true);
+                        showToast('Image uploaded', `${file.name} has been uploaded successfully.`);
+                    } else {
+                        secondFile = file;
+                        secondFileData = e.target.result;
+                        createFilePreview(file, secondFileData, uploadBox2, false);
+                        showToast('Image uploaded', `${file.name} has been uploaded successfully.`);
+                    }
+                    updateCompareButton();
+                };
+                reader.readAsDataURL(file);
+            } else if (isPdfFile(file)) {
+                if (isFirst) {
+                    firstFile = file;
+                    firstFileData = null;
+                    createFilePreview(file, null, uploadBox1, true);
+                    showToast('PDF uploaded', `${file.name} has been uploaded successfully.`);
+                } else {
+                    secondFile = file;
+                    secondFileData = null;
+                    createFilePreview(file, null, uploadBox2, false);
+                    showToast('PDF uploaded', `${file.name} has been uploaded successfully.`);
+                }
+                updateCompareButton();
+            }
+        }
+
+        // Drag and drop handlers
+        function setupDragAndDrop(uploadBox, fileInput, isFirst) {
+            uploadBox.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadBox.classList.add('drag-over');
+            });
+
+            uploadBox.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadBox.classList.remove('drag-over');
+            });
+
+            uploadBox.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadBox.classList.remove('drag-over');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileUpload(files[0], isFirst);
+                }
+            });
+
+            uploadBox.addEventListener('click', (e) => {
+                if (!uploadBox.classList.contains('has-image')) {
+                    fileInput.click();
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0], isFirst);
+                }
+            });
+        }
+
+        // Modal handlers
+        closeModal.addEventListener('click', () => {
+            previewModal.classList.remove('show');
+        });
+
+        previewModal.addEventListener('click', (e) => {
+            if (e.target === previewModal) {
+                previewModal.classList.remove('show');
+            }
+        });
+
+        // Compare button handler
+        compareButton.addEventListener('click', () => {
+            if (!firstFile || !secondFile) {
+                showToast('Missing files', 'Please upload both files before comparing.');
+                return;
+            }
+            
+            showToast('Comparison initiated', 'Starting file comparison process...');
+            
+            // Here you would integrate with your Python script
+            console.log('Comparing files:', { firstFile, secondFile });
+            
+            // For Python integration, you could:
+            // 1. Send the files to a backend endpoint
+            // 2. Use a FormData object to upload files
+            // 3. Call a Python script via an API
+            
+            // Example for future Python integration:
+            /*
+            const formData = new FormData();
+            formData.append('file1', firstFile);
+            formData.append('file2', secondFile);
+            
+            fetch('/compare-files', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Handle comparison result
+                console.log('Comparison result:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+            */
+        });
+
+        // Initialize drag and drop
+        setupDragAndDrop(uploadBox1, fileInput1, true);
+        setupDragAndDrop(uploadBox2, fileInput2, false);
+    </script>
+</body>
+</html>
