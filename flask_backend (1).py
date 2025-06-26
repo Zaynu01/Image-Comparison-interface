@@ -111,7 +111,8 @@ def remove_text_with_paddleocr(image, tile_size=1000, overlap=100):
             tile = image[y:end_y, x:end_x]
 
             try:
-                result = ocr.ocr(tile, cls=True)
+                # result = ocr.ocr(tile, cls=True)
+                result = ocr.predict(tile)
                 
                 if result is not None and len(result) > 0:
                     for idx in range(len(result)):
@@ -301,6 +302,9 @@ def compare_images():
         file1 = request.files['image1']
         file2 = request.files['image2']
 
+        print("Image 1 uploaded successfully:", file1.filename)
+        print("Image 2 uploaded successfully:", file2.filename)
+
         # Convert files to OpenCV images
         img1_bytes = np.frombuffer(file1.read(), np.uint8)
         img2_bytes = np.frombuffer(file2.read(), np.uint8)
@@ -310,14 +314,34 @@ def compare_images():
 
         if image1 is None or image2 is None:
             return jsonify({'error': 'Could not decode images'}), 400
+        
+        print("Images decoded successfully.")
 
         # For web interface, we'll use the full images as ROI
         # In a more advanced version, you could implement ROI selection via coordinates
-        region1_original = image1.copy()
-        region2_original = image2.copy()
+        # region1_original = image1.copy()
+        # region2_original = image2.copy()
+
+        # image1 = cv2.imread(image1)
+        # image2 = cv2.imread(image2)
+
+        if image1 is None or image2 is None:
+            print("Error loading images.")
+            return
+
+        # Select ROI on the first image
+        x1, y1, w1, h1 = select_roi_on_image(image1)
+        x2, y2, w2, h2 = select_roi_on_image(image2)
+
+        # Extract the selected region from both images
+        region1_original = image1[y1:y1 + h1, x1:x1 + w1].copy()
+        region2_original = image2[y2:y2 + h2, x2:x2 + w2].copy()
 
         # Remove text from both images
+        print("Detecting text in first image...")
         region1_no_text, text_mask1, text_boxes1 = remove_text_with_paddleocr(region1_original)
+        
+        print("Detecting text in second image...")
         region2_no_text, text_mask2, text_boxes2 = remove_text_with_paddleocr(region2_original)
 
         # Compare regions
@@ -329,8 +353,12 @@ def compare_images():
             region2_original, H, (region1_original.shape[1], region1_original.shape[0]))
 
         # Analyze differences
+        print("Analyzing differences...")
         results, overlay_clean, annotated_comparison_clean = analyze_differences(
             region1_clean, mask_cleaned, region2_aligned_clean, highlighted_clean)
+
+        # testing
+        print("Results:", results)
 
         # Create final comparison with highlights
         drawing_diff_mask = np.zeros(region1_original.shape[:2], dtype=np.uint8)
@@ -350,6 +378,8 @@ def compare_images():
         highlighted_with_text = cv2.addWeighted(region2_original_aligned, 0.7, color_mask, 0.3, 0)
         final_comparison = np.hstack([region1_original, highlighted_with_text])
         final_comparison = draw_legend(final_comparison)
+
+        print("Saving results...")
 
         # Convert images to base64 for web display
         response_data = {
