@@ -89,59 +89,98 @@ def detect_file_type(file_bytes):
         else:
             return 'unknown'
 
-def pdf_to_images(pdf_bytes, dpi=200):
-    """Convert PDF to list of images using pdf2image"""
+# def pdf_to_images(pdf_bytes, dpi=200):
+#     """Convert PDF to list of images using pdf2image"""
+#     try:
+#         # Convert PDF to images
+#         images = convert_from_bytes(pdf_bytes, dpi=dpi)
+        
+#         # Convert PIL images to OpenCV format
+#         cv_images = []
+#         for img in images:
+#             # Convert PIL to OpenCV
+#             img_array = np.array(img)
+#             if len(img_array.shape) == 3:
+#                 # Convert RGB to BGR for OpenCV
+#                 cv_img = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
+#             else:
+#                 # Grayscale
+#                 cv_img = img_array
+#             cv_images.append(cv_img)
+        
+#         return cv_images
+#     except Exception as e:
+#         print(f"Error converting PDF to images: {e}")
+#         return None
+
+
+def pdf_to_images(file_bytes, dpi=150, max_pages=3):
     try:
-        # Convert PDF to images
-        images = convert_from_bytes(pdf_bytes, dpi=dpi)
-        
-        # Convert PIL images to OpenCV format
+        poppler_path = r"C:\Users\yazaki\poppler-24.08.0\Library\bin"  # <- use your actual path here
+        images = convert_from_bytes(file_bytes, dpi=dpi, poppler_path=poppler_path)
         cv_images = []
-        for img in images:
-            # Convert PIL to OpenCV
-            img_array = np.array(img)
-            if len(img_array.shape) == 3:
-                # Convert RGB to BGR for OpenCV
-                cv_img = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
-            else:
-                # Grayscale
-                cv_img = img_array
-            cv_images.append(cv_img)
-        
+        for i, image in enumerate(images):
+            if i >= max_pages:
+                break
+            image_cv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+            cv_images.append(image_cv)
         return cv_images
     except Exception as e:
-        print(f"Error converting PDF to images: {e}")
+        print("Error converting PDF to images:", str(e))
         return None
 
-def pdf_to_images_pymupdf(pdf_bytes, dpi=200):
-    """Alternative PDF to images conversion using PyMuPDF"""
+
+# def pdf_to_images_pymupdf(pdf_bytes, dpi=200):
+#     """Alternative PDF to images conversion using PyMuPDF"""
+#     try:
+#         # Open PDF from bytes
+#         pdf_document = fitz.open(stream=pdf_bytes, filetype="pdf")
+        
+#         cv_images = []
+#         for page_num in range(len(pdf_document)):
+#             page = pdf_document.load_page(page_num)
+            
+#             # Convert to image
+#             zoom = dpi / 72.0  # Convert DPI to zoom factor
+#             mat = fitz.Matrix(zoom, zoom)
+#             pix = page.get_pixmap(matrix=mat)
+            
+#             # Convert to PIL Image
+#             img_data = pix.tobytes("ppm")
+#             img = Image.open(BytesIO(img_data))
+            
+#             # Convert to OpenCV format
+#             img_array = np.array(img)
+#             cv_img = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
+#             cv_images.append(cv_img)
+        
+#         pdf_document.close()
+#         return cv_images
+#     except Exception as e:
+#         print(f"Error converting PDF to images with PyMuPDF: {e}")
+#         return None
+
+
+def pdf_to_images_pymupdf(file_bytes, scale=2.0, max_pages=3):
     try:
-        # Open PDF from bytes
-        pdf_document = fitz.open(stream=pdf_bytes, filetype="pdf")
-        
+        doc = fitz.open(stream=file_bytes, filetype='pdf')
         cv_images = []
-        for page_num in range(len(pdf_document)):
-            page = pdf_document.load_page(page_num)
-            
-            # Convert to image
-            zoom = dpi / 72.0  # Convert DPI to zoom factor
-            mat = fitz.Matrix(zoom, zoom)
+        for i, page in enumerate(doc):
+            if i >= max_pages:
+                break
+            mat = fitz.Matrix(scale, scale)
             pix = page.get_pixmap(matrix=mat)
-            
-            # Convert to PIL Image
-            img_data = pix.tobytes("ppm")
-            img = Image.open(BytesIO(img_data))
-            
-            # Convert to OpenCV format
-            img_array = np.array(img)
-            cv_img = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
-            cv_images.append(cv_img)
-        
-        pdf_document.close()
+            img = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, pix.n)
+            if pix.n == 4:  # remove alpha
+                img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGR)
+            else:
+                img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            cv_images.append(img)
         return cv_images
     except Exception as e:
-        print(f"Error converting PDF to images with PyMuPDF: {e}")
+        print("Error converting PDF to images with PyMuPDF:", str(e))
         return None
+
 
 def process_file_to_image(file_bytes, file_type):
     """Process file (image or PDF) and return OpenCV image(s)"""
@@ -487,8 +526,18 @@ def compare_files():
         # For web interface, we'll use the full images as ROI
         # In the original code, ROI selection was done interactively
         # For web interface, we'll use the entire image
-        region1_original = image1.copy()
-        region2_original = image2.copy()
+
+        # Select ROI on the first image
+        x1, y1, w1, h1 = select_roi_on_image(image1)
+        x2, y2, w2, h2 = select_roi_on_image(image2)
+
+        # Extract the selected region from both images
+        region1_original = image1[y1:y1 + h1, x1:x1 + w1].copy()
+        region2_original = image2[y2:y2 + h2, x2:x2 + w2].copy()
+
+
+        # region1_original = image1.copy()
+        # region2_original = image2.copy()
 
         # Make sure images are compatible for comparison
         if region1_original.shape != region2_original.shape:
