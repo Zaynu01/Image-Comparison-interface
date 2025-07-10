@@ -862,6 +862,46 @@
             
             // Here you would integrate with your Python script
             console.log('Comparing files:', { firstFile, secondFile });
+
+            // Integration with Python Flask backend
+            const formData = new FormData();
+            formData.append('file1', firstFile);
+            formData.append('file2', secondFile);
+
+
+            fetch('http://localhost:5000/compare-files', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    modalTitle.textContent = 'Comparison Result';
+                    modalBody.innerHTML = `
+                        <div style="margin-bottom: 16px;">
+                            <strong>Total Differences:</strong> ${result.summary.total_differences}<br>
+                            <strong>Missing:</strong> ${result.summary.missing_count}<br>
+                            <strong>Modified:</strong> ${result.summary.modified_count}<br>   
+                        </div>
+                        <img class="modal-image" src="${result.images.comparison}" alt="Comparison Image">
+                    `;
+
+                    previewModal.classList.add('show');
+
+                    // showToast('Comparison Complete', `Differences found: ${result.summary.total_differences}`);
+                    // // Optional: display images or stats from result.images or result.summary
+                    // console.log(result);
+                    // const imgWindow = window.open();
+                    // imgWindow.document.write('<title>Comparison Result</title>');
+                    // imgWindow.document.write(`<img src="${result.images.comparison}" style="width:100%;">`);
+                } else {
+                    showToast('Comparison Failed', result.error || 'Unknown error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error', 'An error occurred while comparing files.');
+            });
             
             // For Python integration, you could:
             // 1. Send the files to a backend endpoint
