@@ -12,548 +12,772 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 25%, #87ceeb 75%, #e0f2fe 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #f0fdfa 100%);
             min-height: 100vh;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(135, 206, 235, 0.05) 0%, transparent 50%);
-            animation: float 20s ease-in-out infinite;
-            z-index: -1;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
-            33% { transform: translate(30px, -30px) rotate(120deg); }
-            66% { transform: translate(-20px, 20px) rotate(240deg); }
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 
-                0 32px 64px rgba(14, 165, 233, 0.12),
-                0 16px 32px rgba(56, 189, 248, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 50px;
-            position: relative;
+            margin-bottom: 48px;
         }
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
+        .header-line {
+            width: 64px;
             height: 4px;
-            background: linear-gradient(90deg, #0ea5e9, #38bdf8);
-            border-radius: 2px;
+            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            border-radius: 9999px;
+            margin: 0 auto 24px;
         }
 
-        .header h1 {
-            color: #1e293b;
+        .title {
             font-size: 3rem;
-            margin-bottom: 16px;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-            background: linear-gradient(135deg, #0ea5e9 0%, #1e40af 100%);
+            font-weight: bold;
+            background: linear-gradient(to right, #2563eb, #0891b2);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
         }
 
-        .header p {
-            color: #64748b;
-            font-size: 1.25rem;
-            font-weight: 400;
-            max-width: 600px;
+        .subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+            max-width: 32rem;
             margin: 0 auto;
         }
 
-        .upload-section {
+        .upload-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            margin-bottom: 48px;
+            max-width: 64rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (min-width: 768px) {
+            .upload-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
         }
 
         .upload-box {
-            border: 2px dashed #cbd5e1;
-            border-radius: 20px;
-            padding: 50px 30px;
-            text-align: center;
-            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            width: 100%;
+            max-width: 28rem;
+            height: 20rem;
+            border: 2px dashed #d1d5db;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             overflow: hidden;
-            box-shadow: 
-                0 4px 16px rgba(14, 165, 233, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            background: #f9fafb;
         }
 
-        .upload-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.1), transparent);
-            transition: left 0.6s;
+        .upload-box.first-image {
+            border-color: #d1d5db;
+            background: #f9fafb;
+        }
+
+        .upload-box.second-image {
+            border-color: #bfdbfe;
+            background: #eff6ff;
         }
 
         .upload-box:hover {
-            border-color: #0ea5e9;
-            background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%);
-            transform: translateY(-4px);
-            box-shadow: 
-                0 20px 40px rgba(14, 165, 233, 0.15),
-                0 8px 16px rgba(56, 189, 248, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.9);
-        }
-
-        .upload-box:hover::before {
-            left: 100%;
-        }
-
-        .upload-box.dragover {
-            border-color: #0ea5e9;
-            background: linear-gradient(145deg, #ffffff 0%, #e0f2fe 100%);
             transform: scale(1.02);
-            box-shadow: 
-                0 24px 48px rgba(14, 165, 233, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .upload-box input[type="file"] {
-            position: absolute;
-            width: 100%;
+        .upload-box.drag-over.first-image {
+            border-color: #60a5fa;
+            background: #dbeafe;
+        }
+
+        .upload-box.drag-over.second-image {
+            border-color: #22d3ee;
+            background: #cffafe;
+        }
+
+        .upload-box.has-image {
+            border-style: solid;
+        }
+
+        .upload-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             height: 100%;
-            opacity: 0;
-            cursor: pointer;
-            top: 0;
-            left: 0;
+            gap: 16px;
+            padding: 24px;
         }
 
         .upload-icon {
-            font-size: 4rem;
-            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 4px 8px rgba(14, 165, 233, 0.2));
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-icon.first {
+            background: #dbeafe;
+        }
+
+        .upload-icon.second {
+            background: #cffafe;
         }
 
         .upload-text {
-            color: #1e293b;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 12px;
+            text-align: center;
         }
 
-        .upload-hint {
-            color: #64748b;
-            font-size: 1rem;
-            font-weight: 400;
+        .upload-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
         }
 
         .image-preview {
-            max-width: 100%;
-            max-height: 320px;
+            position: relative;
+            width: 100%;
+            height: 100%;
             border-radius: 16px;
-            box-shadow: 
-                0 16px 32px rgba(14, 165, 233, 0.12),
-                0 4px 16px rgba(56, 189, 248, 0.08);
-            margin-top: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.8);
+            overflow: hidden;
         }
 
-        .image-info {
-            background: linear-gradient(145deg, #f8fafc 0%, #ffffff 100%);
-            padding: 24px;
-            border-radius: 16px;
-            margin-top: 20px;
-            text-align: left;
-            border: 1px solid rgba(14, 165, 233, 0.1);
-            box-shadow: 
-                0 4px 16px rgba(14, 165, 233, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .image-info h3 {
-            color: #1e293b;
-            margin-bottom: 16px;
-            font-size: 1.25rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #0ea5e9, #1e40af);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            gap: 12px;
         }
 
-        .image-info p {
-            color: #475569;
-            margin: 8px 0;
-            font-size: 0.95rem;
-            font-weight: 500;
+        .image-preview:hover .image-overlay {
+            background: rgba(0, 0, 0, 0.3);
         }
 
-        .image-info p strong {
-            color: #1e293b;
-            font-weight: 600;
+        .overlay-button {
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-preview:hover .overlay-button {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .overlay-button:hover {
+            transform: scale(1.1);
         }
 
         .compare-section {
             text-align: center;
+            margin-bottom: 64px;
         }
 
-        .compare-btn {
-            background: linear-gradient(135deg, #0ea5e9 0%, #1e40af 100%);
+        .compare-button {
+            background: linear-gradient(to right, #2563eb, #0891b2);
             color: white;
             border: none;
-            padding: 18px 48px;
-            font-size: 1.15rem;
+            border-radius: 9999px;
+            padding: 12px 32px;
+            font-size: 1.125rem;
             font-weight: 600;
-            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 
-                0 8px 24px rgba(14, 165, 233, 0.3),
-                0 4px 8px rgba(30, 64, 175, 0.2);
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 0.025em;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
-        .compare-btn::before {
-            content: '';
-            position: absolute;
+        .compare-button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        .compare-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            max-width: 64rem;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .feature-card {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #f3f4f6;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .feature-icon.blue {
+            background: #dbeafe;
+        }
+
+        .feature-icon.cyan {
+            background: #cffafe;
+        }
+
+        .feature-icon.purple {
+            background: #e9d5ff;
+        }
+
+        .feature-icon-inner {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .feature-icon-inner.blue {
+            background: #3b82f6;
+        }
+
+        .feature-icon-inner.cyan {
+            background: #06b6d4;
+        }
+
+        .feature-icon-inner.purple {
+            background: #8b5cf6;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .feature-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
             top: 0;
-            left: -100%;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.6s;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            padding: 16px;
         }
 
-        .compare-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 
-                0 16px 40px rgba(14, 165, 233, 0.4),
-                0 8px 16px rgba(30, 64, 175, 0.3);
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .compare-btn:hover::before {
-            left: 100%;
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 64rem;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
         }
 
-        .compare-btn:active {
-            transform: translateY(-1px);
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
         }
 
-        .compare-btn:disabled {
-            background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: 0 4px 8px rgba(148, 163, 184, 0.2);
+        .modal-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
         }
 
-        .compare-btn:disabled::before {
+        .close-button {
+            background: none;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .close-button:hover {
+            background: #f3f4f6;
+        }
+
+        .modal-body {
+            max-height: calc(90vh - 80px);
+            overflow: auto;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .file-input {
             display: none;
         }
 
-        .status-message {
-            margin-top: 24px;
-            padding: 20px 24px;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: 500;
-            font-size: 1rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+            max-width: 400px;
         }
 
-        .status-success {
-            background: linear-gradient(145deg, #ecfdf5 0%, #f0fdf4 100%);
-            color: #047857;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+        .toast.show {
+            transform: translateX(0);
         }
 
-        .status-error {
-            background: linear-gradient(145deg, #fef2f2 0%, #fef7f7 100%);
-            color: #dc2626;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 4px;
         }
 
-        .status-info {
-            background: linear-gradient(145deg, #f0f9ff 0%, #e0f2fe 100%);
-            color: #0369a1;
-            border: 1px solid rgba(14, 165, 233, 0.2);
-            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
+        .toast-message {
+            font-size: 0.875rem;
+            color: #6b7280;
         }
 
         @media (max-width: 768px) {
-            .upload-section {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-            
-            .header h1 {
-                font-size: 2.25rem;
-            }
-            
-            .header p {
-                font-size: 1.125rem;
-            }
-            
-            .container {
-                padding: 24px;
-                margin: 10px;
-            }
-            
-            .upload-box {
-                padding: 40px 20px;
-            }
-            
-            .upload-icon {
-                font-size: 3.5rem;
-            }
-            
-            .compare-btn {
-                padding: 16px 32px;
-                font-size: 1.1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header h1 {
+            .title {
                 font-size: 2rem;
             }
             
-            .upload-box {
-                padding: 30px 16px;
-            }
-            
-            .upload-icon {
-                font-size: 3rem;
+            .upload-grid {
+                gap: 24px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>Image Comparison Tool</h1>
-            <p>Upload two images to compare and find differences</p>
+            <div class="header-line"></div>
+            <h1 class="title">Image Comparison Tool</h1>
+            <p class="subtitle">Upload two images to compare and find differences</p>
         </div>
 
-        <div class="upload-section">
-            <div class="upload-box" id="upload1">
-                <input type="file" id="file1" accept=".jpg,.jpeg,.png,.bmp,.tiff" />
-                <div class="upload-icon">📷</div>
-                <div class="upload-text">Drop your first image here</div>
-                <div class="upload-hint">or click to browse</div>
-                <div id="preview1"></div>
+        <!-- Upload Areas -->
+        <div class="upload-grid">
+            <div class="upload-area">
+                <div class="upload-box first-image" id="uploadBox1">
+                    <div class="upload-content" id="uploadContent1">
+                        <div class="upload-icon first">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                        </div>
+                        <div class="upload-text">
+                            <p class="upload-title">Drop your first image here</p>
+                            <p class="upload-subtitle">or click to browse</p>
+                        </div>
+                    </div>
+                </div>
+                <input type="file" class="file-input" id="fileInput1" accept="image/*">
             </div>
 
-            <div class="upload-box" id="upload2">
-                <input type="file" id="file2" accept=".jpg,.jpeg,.png,.bmp,.tiff" />
-                <div class="upload-icon">📷</div>
-                <div class="upload-text">Drop your second image here</div>
-                <div class="upload-hint">or click to browse</div>
-                <div id="preview2"></div>
+            <div class="upload-area">
+                <div class="upload-box second-image" id="uploadBox2">
+                    <div class="upload-content" id="uploadContent2">
+                        <div class="upload-icon second">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                        </div>
+                        <div class="upload-text">
+                            <p class="upload-title">Drop your second image here</p>
+                            <p class="upload-subtitle">or click to browse</p>
+                        </div>
+                    </div>
+                </div>
+                <input type="file" class="file-input" id="fileInput2" accept="image/*">
             </div>
         </div>
 
+        <!-- Compare Button -->
         <div class="compare-section">
-            <button class="compare-btn" id="compareBtn" disabled>
-                Compare Images
-            </button>
-            <div id="statusMessage"></div>
+            <button class="compare-button" id="compareButton" disabled>Compare Images</button>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon blue">
+                    <div class="feature-icon-inner blue"></div>
+                </div>
+                <h3 class="feature-title">Drag & Drop</h3>
+                <p class="feature-description">Simply drag your images into the upload areas</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon cyan">
+                    <div class="feature-icon-inner cyan"></div>
+                </div>
+                <h3 class="feature-title">Preview</h3>
+                <p class="feature-description">Click on uploaded images to preview them</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon purple">
+                    <div class="feature-icon-inner purple"></div>
+                </div>
+                <h3 class="feature-title">Compare</h3>
+                <p class="feature-description">Advanced comparison using Python algorithms</p>
+            </div>
         </div>
     </div>
 
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Image Preview</h3>
+                <button class="close-button" id="closeModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img class="modal-image" id="modalImage" src="" alt="Preview">
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast" id="toast">
+        <div class="toast-title" id="toastTitle"></div>
+        <div class="toast-message" id="toastMessage"></div>
+    </div>
+
     <script>
-        // Global variables to store uploaded images
-        let image1 = null;
-        let image2 = null;
+        // Global state
+        let firstImage = null;
+        let secondImage = null;
+        let firstImageFile = null;
+        let secondImageFile = null;
 
-        // Initialize the interface
-        document.addEventListener('DOMContentLoaded', function() {
-            setupFileUpload('file1', 'upload1', 'preview1', 1);
-            setupFileUpload('file2', 'upload2', 'preview2', 2);
+        // DOM elements
+        const uploadBox1 = document.getElementById('uploadBox1');
+        const uploadBox2 = document.getElementById('uploadBox2');
+        const fileInput1 = document.getElementById('fileInput1');
+        const fileInput2 = document.getElementById('fileInput2');
+        const compareButton = document.getElementById('compareButton');
+        const previewModal = document.getElementById('previewModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalImage = document.getElementById('modalImage');
+        const closeModal = document.getElementById('closeModal');
+        const toast = document.getElementById('toast');
+
+        // Utility functions
+        function showToast(title, message) {
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
             
-            document.getElementById('compareBtn').addEventListener('click', compareImages);
-        });
-
-        function setupFileUpload(fileInputId, uploadBoxId, previewId, imageNumber) {
-            const fileInput = document.getElementById(fileInputId);
-            const uploadBox = document.getElementById(uploadBoxId);
-            const preview = document.getElementById(previewId);
-
-            // File input change event
-            fileInput.addEventListener('change', function(e) {
-                handleFileUpload(e.target.files[0], previewId, imageNumber);
-            });
-
-            // Drag and drop events
-            uploadBox.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                uploadBox.classList.add('dragover');
-            });
-
-            uploadBox.addEventListener('dragleave', function(e) {
-                e.preventDefault();
-                uploadBox.classList.remove('dragover');
-            });
-
-            uploadBox.addEventListener('drop', function(e) {
-                e.preventDefault();
-                uploadBox.classList.remove('dragover');
-                
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    handleFileUpload(files[0], previewId, imageNumber);
-                }
-            });
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
-        function handleFileUpload(file, previewId, imageNumber) {
-            if (!file) return;
+        function updateCompareButton() {
+            compareButton.disabled = !firstImage || !secondImage;
+        }
 
-            // Validate file type
-            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/bmp', 'image/tiff'];
-            if (!validTypes.includes(file.type)) {
-                showStatus('Please select a valid image file (JPEG, PNG, BMP, TIFF)', 'error');
-                return;
+        function createImagePreview(imageSrc, uploadBox, isFirst) {
+            const preview = document.createElement('div');
+            preview.className = 'image-preview';
+            preview.innerHTML = `
+                <img class="preview-image" src="${imageSrc}" alt="Uploaded preview">
+                <div class="image-overlay">
+                    <button class="overlay-button" onclick="previewImage('${imageSrc}', '${isFirst ? 'First' : 'Second'} Image Preview')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                    <button class="overlay-button" onclick="removeImage(${isFirst ? 1 : 2})">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3,6 5,6 21,6"/>
+                            <path d="M19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"/>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            uploadBox.innerHTML = '';
+            uploadBox.appendChild(preview);
+            uploadBox.classList.add('has-image');
+        }
+
+        function resetUploadBox(uploadBox, isFirst) {
+            uploadBox.classList.remove('has-image');
+            uploadBox.innerHTML = `
+                <div class="upload-content">
+                    <div class="upload-icon ${isFirst ? 'first' : 'second'}">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="${isFirst ? '#3b82f6' : '#06b6d4'}" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                    </div>
+                    <div class="upload-text">
+                        <p class="upload-title">Drop your ${isFirst ? 'first' : 'second'} image here</p>
+                        <p class="upload-subtitle">or click to browse</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Global functions for onclick handlers
+        window.previewImage = function(imageSrc, title) {
+            modalTitle.textContent = title;
+            modalImage.src = imageSrc;
+            previewModal.classList.add('show');
+        }
+
+        window.removeImage = function(imageNumber) {
+            if (imageNumber === 1) {
+                firstImage = null;
+                firstImageFile = null;
+                fileInput1.value = '';
+                resetUploadBox(uploadBox1, true);
+                showToast('Image Removed', 'First image has been removed.');
+            } else {
+                secondImage = null;
+                secondImageFile = null;
+                fileInput2.value = '';
+                resetUploadBox(uploadBox2, false);
+                showToast('Image Removed', 'Second image has been removed.');
             }
+            updateCompareButton();
+        }
 
-            // Validate file size (max 10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                showStatus('File size should be less than 10MB', 'error');
+        // File handling
+        function handleImageUpload(file, isFirst) {
+            if (!file.type.startsWith('image/')) {
+                showToast('Invalid File', 'Please select an image file.');
                 return;
             }
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    displayImagePreview(e.result, file, img, previewId, imageNumber);
-                    
-                    // Store image data
-                    if (imageNumber === 1) {
-                        image1 = { file: file, data: e.result, width: img.width, height: img.height };
-                    } else {
-                        image2 = { file: file, data: e.result, width: img.width, height: img.height };
-                    }
-                    
-                    checkCompareButton();
-                };
-                img.src = e.result;
+                if (isFirst) {
+                    firstImage = e.target.result;
+                    firstImageFile = file;
+                    createImagePreview(firstImage, uploadBox1, true);
+                    showToast('First image uploaded', `${file.name} has been uploaded successfully.`);
+                } else {
+                    secondImage = e.target.result;
+                    secondImageFile = file;
+                    createImagePreview(secondImage, uploadBox2, false);
+                    showToast('Second image uploaded', `${file.name} has been uploaded successfully.`);
+                }
+                updateCompareButton();
             };
             reader.readAsDataURL(file);
         }
 
-        function displayImagePreview(imageSrc, file, img, previewId, imageNumber) {
-            const preview = document.getElementById(previewId);
-            
-            // Clear previous content
-            preview.innerHTML = '';
-            
-            // Create image element
-            const imageElement = document.createElement('img');
-            imageElement.src = imageSrc;
-            imageElement.className = 'image-preview';
-            imageElement.alt = `Image ${imageNumber}`;
-            
-            // Create info panel
-            const infoPanel = document.createElement('div');
-            infoPanel.className = 'image-info';
-            infoPanel.innerHTML = `
-                <h3>Image ${imageNumber} Info</h3>
-                <p><strong>Name:</strong> ${file.name}</p>
-                <p><strong>Size:</strong> ${formatFileSize(file.size)}</p>
-                <p><strong>Type:</strong> ${file.type}</p>
-                <p><strong>Dimensions:</strong> ${img.width} × ${img.height} pixels</p>
-            `;
-            
-            preview.appendChild(imageElement);
-            preview.appendChild(infoPanel);
-            
-            showStatus(`Image ${imageNumber} uploaded successfully!`, 'success');
+        // Drag and drop handlers
+        function setupDragAndDrop(uploadBox, fileInput, isFirst) {
+            uploadBox.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadBox.classList.add('drag-over');
+            });
+
+            uploadBox.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadBox.classList.remove('drag-over');
+            });
+
+            uploadBox.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadBox.classList.remove('drag-over');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleImageUpload(files[0], isFirst);
+                }
+            });
+
+            uploadBox.addEventListener('click', (e) => {
+                if (!uploadBox.classList.contains('has-image')) {
+                    fileInput.click();
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleImageUpload(e.target.files[0], isFirst);
+                }
+            });
         }
 
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
+        // Modal handlers
+        closeModal.addEventListener('click', () => {
+            previewModal.classList.remove('show');
+        });
 
-        function checkCompareButton() {
-            const compareBtn = document.getElementById('compareBtn');
-            if (image1 && image2) {
-                compareBtn.disabled = false;
-                showStatus('Both images uploaded! Ready to compare.', 'info');
-            } else {
-                compareBtn.disabled = true;
+        previewModal.addEventListener('click', (e) => {
+            if (e.target === previewModal) {
+                previewModal.classList.remove('show');
             }
-        }
+        });
 
-        function compareImages() {
-            if (!image1 || !image2) {
-                showStatus('Please upload both images first', 'error');
+        // Compare button handler
+        compareButton.addEventListener('click', () => {
+            if (!firstImage || !secondImage) {
+                showToast('Missing images', 'Please upload both images before comparing.');
                 return;
             }
+            
+            showToast('Comparison initiated', 'Starting image comparison process...');
+            
+            // Here you would integrate with your Python script
+            console.log('Comparing images:', { firstImageFile, secondImageFile });
+            
+            // For Python integration, you could:
+            // 1. Send the files to a backend endpoint
+            // 2. Use a FormData object to upload files
+            // 3. Call a Python script via an API
+            
+            
+    // Integration with Python Flask backend
+    const formData = new FormData();
+    formData.append('image1', firstImageFile);
+    formData.append('image2', secondImageFile);
 
-            showStatus('Comparison feature will be implemented in the next step!', 'info');
-            
-            // Log image data for development purposes
-            console.log('Image 1:', image1);
-            console.log('Image 2:', image2);
-            
-            // This is where we'll implement the actual comparison logic
-            // For now, we'll just show a placeholder message
+    fetch('http://localhost:5000/compare-images', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            showToast('Comparison Complete', `Differences found: ${result.summary.total_differences}`);
+            // Optional: display images or stats from result.images or result.summary
+            console.log(result);
+            const imgWindow = window.open();
+            imgWindow.document.write('<title>Comparison Result</title>');
+            imgWindow.document.write(`<img src="${result.images.comparison}" style="width:100%;">`);
+        } else {
+            showToast('Comparison Failed', result.error || 'Unknown error');
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error', 'An error occurred while comparing images.');
+    });
+    
+            /*
+            const formData = new FormData();
+            formData.append('image1', firstImageFile);
+            formData.append('image2', secondImageFile);
+            
+            fetch('/compare-images', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Handle comparison result
+                console.log('Comparison result:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+            */
+        });
 
-        function showStatus(message, type) {
-            const statusMessage = document.getElementById('statusMessage');
-            statusMessage.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
-            
-            // Auto-hide success messages after 3 seconds
-            if (type === 'success') {
-                setTimeout(() => {
-                    statusMessage.innerHTML = '';
-                }, 3000);
-            }
-        }
+        // Initialize drag and drop
+        setupDragAndDrop(uploadBox1, fileInput1, true);
+        setupDragAndDrop(uploadBox2, fileInput2, false);
     </script>
 </body>
 </html>
